@@ -1,0 +1,61 @@
+# File structure version
+version: "3"
+
+volumes:
+  db-volume: {}
+
+services:
+  psqldb:
+    restart: always
+    image: postgres
+    volumes:
+      - db-volume:/var/lib/postgresql/ggst/data
+    environment:
+      - POSTGRES_DB=ggst
+      - POSTGRES_USER=zerostone
+      - POSTGRES_PASSWORD=zerostone
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8
+    expose:
+      - "55432"
+    ports:
+      - "55432:45432"
+    command: -p 55432
+
+  app:
+    build:
+      context: .
+      dockerfile: config/app/Dockerfile_app_local
+    hostname: app
+    volumes:
+      - ./GGST_framedata:/GGST_framedata
+    expose:
+      - "12000"
+    ports:
+      - "12000:12000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings.local
+      - DEBUG=True
+    depends_on:
+      - psqldb
+      - redis
+      - worker
+
+  worker:
+    build:
+      context: .
+      dockerfile: config/app/Dockerfile_app_local
+    volumes:
+      - ./GGST_framedata:/GGST_framedata
+    depends_on:
+      - redis
+      - psqldb
+
+  redis:
+    image: redis:5.0.5
+    expose:
+      - "26379"
+    ports:
+      - "26379:26379"
+    restart: always
+    command: --port 26379

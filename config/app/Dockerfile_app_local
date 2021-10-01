@@ -1,0 +1,20 @@
+FROM python:3
+ENV PYTHONUNBUFFERED 1
+
+ARG DJANGO_ALLOWED_HOSTS
+ARG DJANGO_SECRET_KEY
+ARG DJANGO_CORS_ORIGIN_WHITELIST
+
+RUN mkdir /config
+COPY config/app /config/
+
+RUN pip install --no-cache-dir -r /config/requirements.txt
+
+EXPOSE 12000
+
+RUN chmod +x /config/start-server-local.sh
+CMD ["/bin/bash", "/config/start-server-local.sh"]
+
+RUN mkdir /GGST_framedata
+WORKDIR /GGST_framedata
+COPY GGST_framedata /GGST_framedata/
