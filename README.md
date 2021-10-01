@@ -1,0 +1,1 @@
+# guiltygear-strive-frame-data-back
