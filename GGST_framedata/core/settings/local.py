@@ -22,11 +22,68 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 
-SECRETS_DIR = os.path.join(BASE_DIR, '.secrets')
-SECRETS_BASE = os.path.join(SECRETS_DIR, 'base.json')
-secrets_base = json.loads(open(SECRETS_BASE, 'rt').read())
+if os.getenv('GITHUB_ACTION', None):
+    SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'ggst',
+            'USER': 'zerostone',
+            'PASSWORD': 'zerostone',
+            'HOST': 'localhost',
+            'PORT': 5432,
+        }
+    }
 
-SECRET_KEY = secrets_base['DJANGO_SECRET_KEY']
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://127.0.0.1:6379/1",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                "IGNORE_EXCEPTION": True,  # needed for redis is only cache
+                "PARSER_CLASS": "redis.connection.HiredisParser",
+            },
+
+        },
+    }
+
+    CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+    CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+
+else:
+    SECRETS_DIR = os.path.join(BASE_DIR, '.secrets')
+    SECRETS_BASE = os.path.join(SECRETS_DIR, 'base.json')
+    secrets_base = json.loads(open(SECRETS_BASE, 'rt').read())
+
+    SECRET_KEY = secrets_base['DJANGO_SECRET_KEY']
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'ggst',
+            'USER': 'zerostone',
+            'PASSWORD': 'zerostone',
+            'HOST': 'psqldb',
+            'PORT': 55432,
+        }
+    }
+
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://redis:6379/1",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                "IGNORE_EXCEPTION": True,  # needed for redis is only cache
+                "PARSER_CLASS": "redis.connection.HiredisParser",
+            },
+
+        },
+    }
+
+    CELERY_BROKER_URL = 'redis://redis:26379/0'
+    CELERY_RESULT_BACKEND = 'redis://redis:26379/0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -134,6 +191,3 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-CELERY_BROKER = 'redis://redis:26379/0'
-CELERY_BACKEND = 'redis://redis:26379/0'
