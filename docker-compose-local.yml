@@ -19,7 +19,7 @@ services:
     expose:
       - "55432"
     ports:
-      - "55432:45432"
+      - "55432:55432"
     command: -p 55432
 
   app:

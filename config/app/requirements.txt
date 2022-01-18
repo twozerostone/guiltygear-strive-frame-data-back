@@ -15,4 +15,5 @@ boto3
 hiredis
 redis
 django-redis
+django-ninja
 celery[redis]
