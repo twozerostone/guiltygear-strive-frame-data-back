@@ -1,6 +1,10 @@
 # guiltygear-strive-frame-data-back
 
-## TIL
+## ERD
+
+- https://www.erdcloud.com/d/7e5Fy5Gw23TPBzGWC
+
+## 개발일지
 
 #### 2021-10-08
 
@@ -22,3 +26,8 @@
   GCP 같은 경우엔, db설정을 잘못해서 아무 접속도 없는데 유지비만 한달에 30만원이 나오게 되었다.
   postgresql 사양을 잘못해서 높은 사양으로 잡아뒀던 것이다.
   우선 그달에 서버를 중지시켰고, 우선 docker-compose로 진행을 한 후, cloud server가 필요한 경우 다시 설정을 해주거나 AWS lambda쪽을 활용하는 방법으로 진행해야 할 것 같다.
+
+#### 2022-01-19
+
+- 기존 사이트에는 기술의 변화(key down 등)으로 변하는 속성을 하나의 row에 정리하였지만, 내 app에서는 다른 row로 정리할 것이다.
+  DB modeling 목표는 우선 확장성 좋게 만드는 것이다. 추가 될 여지가 있는 부분은 foreign 관계로 다 빼 두는 것으로 하였다.
