@@ -21,8 +21,10 @@ class Character(models.Model):
         ('Normal', 'Normal'),
         ('Heavy', 'Heavy')
     )
-    eng_name = models.CharField(verbose_name='영문캐릭터명', max_length=100)
-    kor_name = models.CharField(verbose_name='한글캐릭터명', max_length=200)
+    eng_name = models.CharField(
+        verbose_name='영문캐릭터명', max_length=100, unique=True)
+    kor_name = models.CharField(
+        verbose_name='한글캐릭터명', max_length=200, unique=True)
     description = models.TextField(verbose_name='캐릭터 설명')
     defence = models.FloatField(verbose_name='방어')
     guts = models.IntegerField(verbose_name='근성치', validators=[

@@ -31,3 +31,9 @@
 
 - 기존 사이트에는 기술의 변화(key down 등)으로 변하는 속성을 하나의 row에 정리하였지만, 내 app에서는 다른 row로 정리할 것이다.
   DB modeling 목표는 우선 확장성 좋게 만드는 것이다. 추가 될 여지가 있는 부분은 foreign 관계로 다 빼 두는 것으로 하였다.
+
+#### 2022-02-14
+
+- django-ninja에서는 pydantic의 schema로 serialize를 진행하여 기존 django에서 느린 modelserializer를 대체한다.
+  pydantic에서는 model에서 validator annotation으로 validate하였고, django에서는 serializer나 view단에서 validate를 진행하였다.
+  ninja에서는 어떤 방식이 효율적인지 알아볼 필요가 있을 것 같다.
