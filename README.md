@@ -35,5 +35,12 @@
 #### 2022-02-14
 
 - django-ninja에서는 pydantic의 schema로 serialize를 진행하여 기존 django에서 느린 modelserializer를 대체한다.
-  pydantic에서는 model에서 validator annotation으로 validate하였고, django에서는 serializer나 view단에서 validate를 진행하였다.
+  pydantic에서는 model에서 validator annotation으로 validate하였고, drf에서는 serializer나 view단에서 validate를 진행하였다.
   ninja에서는 어떤 방식이 효율적인지 알아볼 필요가 있을 것 같다.
+
+#### 2022-02-18
+
+- pydantic model과 마찬가지로 validator annotation으로 validate가 가능하였다. 대신 schema에서 진행하면 되었다.
+  patch의 경우에는 post와 다르게 optional한 field들을 가지면서 같은 validation이 필요한데, 이부분은 똑같은 field와 validate function을 가진 schema를 두개만들어 관리했었다.
+  하지만, 코드상으로 중복된것이 명확하여 post schema를 상속받으면서 field들을 override하는 형식으로 구현하였다.
+  patch의 field는 항상 optional하기 때문에 이후 이부분들을 모두 써준다면 불필요한 코드가 많아질 것 같기에 검색한 결과 [좋은 방법](https://github.com/twozerostone/guiltygear-strive-frame-data-back/blob/dev/GGST_framedata/core/modules.py)을 찾아, annotate하는 형식으로 구현하였다.
